@@ -922,7 +922,7 @@ body {
         <span id="statusText">Idle</span>
       </div>
       <div class="hf-link">
-        <a href="https://huggingface.co/settings/tokens" target="_blank">Get free HF token →</a>
+        <a href="https://fal.ai" target="_blank">⚡ Powered by fal.ai</a>
       </div>
     </div>
   </aside>
@@ -934,7 +934,7 @@ body {
     <section class="tab active" id="tab-generate">
       <div class="page-header">
         <h1>Generate</h1>
-        <p class="page-sub">Describe your video. AI does the rest.</p>
+        <p class="page-sub">Describe your video. Powered by Fal.ai 🎬</p>
       </div>
 
       <div class="two-col">
@@ -947,7 +947,7 @@ body {
             <label class="field-label">
               <span class="label-icon">🔑</span>
               HuggingFace Token
-              <a href="https://huggingface.co/settings/tokens" target="_blank" class="label-link">Get free →</a>
+              
             </label>
             <div class="token-row">
               <input id="hfToken" type="password" class="input" placeholder="hf_xxxxxxxxxxxxxxxx" autocomplete="off"/>
@@ -960,9 +960,10 @@ body {
           <div class="field-card">
             <label class="field-label"><span class="label-icon">🤖</span> Model</label>
             <select id="model" class="input select">
-              <option value="Wan-AI/Wan2.1-T2V-1.3B">Wan2.1 T2V 1.3B (Fast, Recommended ⚡)</option>
-              <option value="damo-vilab/text-to-video-ms-1.7b">DAMO Text-to-Video 1.7B (Classic)</option>
-              <option value="cerspense/zeroscope_v2_576w">ZeroScope v2 576w (Wide)</option>
+              <option value="wan21">Wan 2.1 T2V (Best Quality ⭐)</option>
+              <option value="ltx">LTX Video (Fast ⚡)</option>
+              <option value="cog">CogVideoX 5B (Cinematic 🎬)</option>
+              <option value="fast">AnimateDiff (Fastest 🚀)</option>
             </select>
           </div>
 
@@ -1373,8 +1374,8 @@ async function generate() {
   const model  = els.model.value;
 
   // Validation
-  if (!token) return showError('Please enter your HuggingFace API token.\nGet one free at huggingface.co/settings/tokens');
-  if (!token.startsWith('hf_')) return showError('Invalid token format.\nHuggingFace tokens start with "hf_"');
+  // Token handled server-side
+  
   if (!prompt) return showError('Please enter a prompt describing your video.');
 
   state.generating = true;
@@ -1408,13 +1409,10 @@ async function generate() {
       },
       body: JSON.stringify({
         model: model,
-        token: token,
         prompt: fullPrompt,
-        parameters: {
-          num_inference_steps: steps,
-          num_frames: numFrames,
-          ...(negPrompt && { negative_prompt: negPrompt }),
-        },
+        negativePrompt: negPrompt,
+        steps: steps,
+        frames: numFrames,
       }),
     });
 
